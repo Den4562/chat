@@ -9,6 +9,7 @@ export default function Login() {
     const { user } = await auth.signInWithPopup(provider);
     console.log(user);
   };
+
   return (
     <Container>
       <Grid
@@ -25,12 +26,12 @@ export default function Login() {
         >
           <Box p={5}>
             <Button color={"warning"} variant={"outlined"} onClick={login}>
-              Увiйти через
+              Увійти через{" "}
               <img
                 style={{ marginLeft: "10px" }}
                 width={80}
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/640px-Google_2015_logo.svg.png"
-              />{" "}
+                src="https://iconape.com/wp-content/files/ur/370111/svg/google-logo-icon-png-svg.png"
+              />
             </Button>
           </Box>
         </Grid>

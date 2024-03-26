@@ -9,21 +9,21 @@ export default function Navigation() {
   const { auth } = useAppContext();
   const [user] = useAuthState(auth);
   return (
-    <AppBar color={"default"} position={"static"}>
+    <AppBar color={"default"} position="static">
       <Toolbar>
         <Grid container justifyContent={"flex-end"}>
           {user ? (
             <Button
               color={"warning"}
-              varinant={"outlined"}
-              onclick={() => auth.signOut()}
+              variant={"outlined"}
+              onClick={() => auth.signOut()}
             >
               Вийти
             </Button>
           ) : (
             <NavLink to={LOGIN_ROUTE}>
-              <Button color={"primary"} varinant={"outlined"}>
-                Увiйти
+              <Button color={"primary"} variant={"outlined"}>
+                Увійти
               </Button>
             </NavLink>
           )}

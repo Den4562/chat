@@ -1,6 +1,7 @@
 import React from "react";
 import s from "../style/loader.module.css";
 import { Container, Grid } from "@mui/material";
+import { alignProperty } from "@mui/material/styles/cssUtils";
 export default function Loader() {
   return (
     <Container>

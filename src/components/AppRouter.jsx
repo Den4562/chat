@@ -4,9 +4,8 @@ import { privateRoutes, publicRoutes } from "../routes";
 import { CHAT_ROUTE, LOGIN_ROUTE } from "../utils/consts";
 import { useAppContext } from "../utils/context";
 import { useAuthState } from "react-firebase-hooks/auth";
-export default function AppRoutes() {
-  //   const user = true;
-
+export default function AppRouter() {
+  //   const user = false;
   const navigate = useNavigate();
   const { auth } = useAppContext();
   const [user] = useAuthState(auth);
