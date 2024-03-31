@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Den4562/chat/static/css/main.59fd8e23.css",
-    "main.js": "/Den4562/chat/static/js/main.a3981700.js",
-    "index.html": "/Den4562/chat/index.html",
-    "main.59fd8e23.css.map": "/Den4562/chat/static/css/main.59fd8e23.css.map",
-    "main.a3981700.js.map": "/Den4562/chat/static/js/main.a3981700.js.map"
+    "main.css": "/chat/static/css/main.59fd8e23.css",
+    "main.js": "/chat/static/js/main.2d9a4c27.js",
+    "index.html": "/chat/index.html",
+    "main.59fd8e23.css.map": "/chat/static/css/main.59fd8e23.css.map",
+    "main.2d9a4c27.js.map": "/chat/static/js/main.2d9a4c27.js.map"
   },
   "entrypoints": [
     "static/css/main.59fd8e23.css",
-    "static/js/main.a3981700.js"
+    "static/js/main.2d9a4c27.js"
   ]
 }
