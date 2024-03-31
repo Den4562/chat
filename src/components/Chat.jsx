@@ -4,22 +4,23 @@ import Message from "./Message";
 import { useAppContext } from "../utils/context";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-
 import Loader from "./Loader";
 
 export default function Chat() {
   const [value, setValue] = useState("");
   const { auth, firestore, firebase } = useAppContext();
   const [user] = useAuthState(auth);
+  console.log(user);
 
-  //Получение сообщений
+  // хук отримання повідомлень
   const [messages, loading] = useCollectionData(
     firestore.collection("messages").orderBy("createdAt")
   );
   if (loading) {
     return <Loader />;
   }
-  //Отправка сообщения
+  // console.log(messages);
+  // відправка повідомлень
   const sendMessage = async () => {
     firestore.collection("messages").add({
       uid: user.uid,
@@ -33,13 +34,15 @@ export default function Chat() {
 
   return (
     <Container>
+          {" "}
       <Grid
         container
         justifyContent={"center"}
         alignContent={"flex-start"}
         style={{ height: window.innerHeight - 50, marginTop: "10px" }}
       >
-        <Message messages={messages} />
+               <Message messages={messages} />
+              {" "}
         <Grid
           container
           justifyContent={"space-between"}
@@ -50,22 +53,27 @@ export default function Chat() {
             backgroundColor: "#fafafa",
           }}
         >
+                  {" "}
           <TextField
             variant={"outlined"}
             maxRows={2}
-            style={{ width: "80%" }}
+            style={{ width: "50%" }}
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
+                  {" "}
           <Button
-            variant={"contained"}
-            style={{ marginLeft: "8px", width: "18%", height: "50px" }}
             onClick={sendMessage}
+            variant={"contained"}
+            style={{ marginLeft: "5px", width: "20%", height: "100%" }}
           >
-            Надіслати
+            Надіслати{" "}
           </Button>
+                {" "}
         </Grid>
+            {" "}
       </Grid>
+        {" "}
     </Container>
   );
 }

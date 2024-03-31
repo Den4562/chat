@@ -1,15 +1,39 @@
 import { Avatar, Grid } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { parseFirebaseTime } from "../utils/formatDate";
-import { useRef } from "react";
+import { styleMessageByUser } from "../utils/alignMessage";
+import { useAppContext } from "../utils/context";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Message({ messages }) {
+  // console.log(messages);
+  const { auth } = useAppContext();
+  const [user] = useAuthState(auth);
+
   const messagesEndRef = useRef(null);
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+  // grouped by date
+  const groupMessageByDate = (messages) => {
+    const groupedMessages = {};
+    messages.forEach(({ createdAt, ...rest }) => {
+      if (createdAt && createdAt.seconds) {
+        const date = new Date(createdAt.seconds * 1000).toLocaleDateString(
+          "uk-UA"
+        );
+        if (!groupedMessages[date]) {
+          groupedMessages[date] = [];
+        }
+        groupedMessages[date].push({ createdAt, ...rest });
+      }
+    });
+    return groupedMessages;
+  };
+  const groupedMessagesObj = groupMessageByDate(messages);
+  console.log(groupedMessagesObj);
   return (
     <div
       style={{
@@ -21,32 +45,72 @@ export default function Message({ messages }) {
         padding: 30,
       }}
     >
-      {messages.map(({ photoUrl, displayName, text, createdAt }, index) => (
-        <div
-          key={createdAt}
-          ref={index === messages.length - 1 ? messagesEndRef : null}
-        >
-          <Grid container key={createdAt} alignItems={"center"}>
-            <Avatar src={photoUrl} />
-            <Grid
-              contauner
-              color="white"
-              style={{
-                width: "auto",
-                backgroundColor: "#806491",
-                margin: "0 10px 10px 10px",
-                maxWidth: "30%",
-                borderRadius: "20px 20px 20px 0px",
-                padding: "10px",
-              }}
+      {/* відображаємо повідомлення, груповані за датами */}
+      {Object.entries(groupedMessagesObj).map(([date, messages]) => (
+        <div key={date}>
+          <p
+            style={{
+              fontSize: "12px",
+              fontWeight: 500,
+              margin: "10px 0",
+              textAlign: "center",
+            }}
+          >
+            {date}
+          </p>
+          {messages.map(({ photoUrl, displayName, text, createdAt }, index) => (
+            <div
+              key={createdAt}
+              ref={index === messages.length - 1 ? messagesEndRef : null}
             >
-              <Grid>
-                <p>{displayName}</p>
-                {/* <p>{parseFirebaseTime(createdAt)}</p> */}
+              <Grid
+                container
+                key={createdAt}
+                alignItems={"center"}
+                flexDirection={
+                  styleMessageByUser(messages[index], user).flexDirection
+                }
+              >
+                <Avatar src={photoUrl} />
+                <Grid
+                  container
+                  color="white"
+                  style={{
+                    width: "auto",
+                    backgroundColor: `${
+                      styleMessageByUser(messages[index], user).backgroundColor
+                    }`,
+                    margin: "0 10px 10px 10px",
+                    maxWidth: "30%",
+                    borderRadius: `${
+                      styleMessageByUser(messages[index], user).borderRadius
+                    }`,
+                    padding: "10px",
+                  }}
+                >
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                  >
+                    <p
+                      style={{
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        // marginBottom: "10px",
+                      }}
+                    >
+                      {displayName}
+                    </p>
+                    <p style={{ fontSize: "8px", fontWeight: 600 }}>
+                      {parseFirebaseTime(createdAt)}
+                    </p>
+                  </Grid>
+                  <p>{text}</p>
+                </Grid>
               </Grid>
-              <p>{text}</p>
-            </Grid>
-          </Grid>
+            </div>
+          ))}
         </div>
       ))}
     </div>
