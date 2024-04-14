@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-
+import { useCollectionData } from "react-firebase-hooks/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyAZoVLUuX9u4DMnYPLIagruwTH7jZ6long",
   authDomain: "chattest-b4ca5.firebaseapp.com",
@@ -23,8 +23,12 @@ export const useAppContext = () => {
 };
 
 export const AppProvider = ({ children }) => {
+  const [users] = useCollectionData(
+    firestore.collection("users").orderBy("uid")
+  );
+
   return (
-    <AppContext.Provider value={{ firebase, firestore, auth }}>
+    <AppContext.Provider value={{ firebase, auth, firestore, users }}>
       {children}
     </AppContext.Provider>
   );

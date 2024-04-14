@@ -5,10 +5,11 @@ import { useAppContext } from "../utils/context";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Loader from "./Loader";
+import { Friends } from "./Friends";
 
 export default function Chat() {
   const [value, setValue] = useState("");
-  const { auth, firestore, firebase } = useAppContext();
+  const { auth, firestore, firebase, users } = useAppContext();
   const [user] = useAuthState(auth);
   console.log(user);
 
@@ -22,58 +23,64 @@ export default function Chat() {
   // console.log(messages);
   // відправка повідомлень
   const sendMessage = async () => {
-    firestore.collection("messages").add({
+    const message = {
       uid: user.uid,
       displayName: user.displayName,
       photoUrl: user.photoURL,
       text: value,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    };
+    const chatsCollection = firestore.collection("chats");
+    const chatRef = chatsCollection.doc();
+    chatRef.set({ users: ["uid_1", "uid_2"], newMessage: message });
+
+    firestore.collection("messages").add(message);
     setValue("");
   };
 
   return (
     <Container>
-          {" "}
-      <Grid
-        container
-        justifyContent={"center"}
-        alignContent={"flex-start"}
-        style={{ height: window.innerHeight - 50, marginTop: "10px" }}
-      >
-               <Message messages={messages} />
-              {" "}
+      <Grid container flexWrap={"nowrap"}>
+        <Friends users={users} />
         <Grid
           container
-          justifyContent={"space-between"}
-          alignItems={"center"}
+          justifyContent={"flex-end"}
+          alignContent={"flex-start"}
           style={{
-            width: "80%",
-            marginTop: "20px",
-            backgroundColor: "#fafafa",
+            height: window.innerHeight - 50,
+            marginTop: "10px",
+            width: "360%",
           }}
         >
-                  {" "}
-          <TextField
-            variant={"outlined"}
-            maxRows={2}
-            style={{ width: "50%" }}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-                  {" "}
-          <Button
-            onClick={sendMessage}
-            variant={"contained"}
-            style={{ marginLeft: "5px", width: "20%", height: "100%" }}
+          <Message messages={messages} />
+          <Grid
+            container
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            style={{
+              width: "80%",
+              marginTop: "20px",
+              backgroundColor: "#fafafa",
+            }}
           >
-            Надіслати{" "}
-          </Button>
-                {" "}
+            <TextField
+              variant={"outlined"}
+              maxRows={2}
+              style={{ width: "50%" }}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+
+            <Button
+              onClick={sendMessage}
+              variant={"contained"}
+              style={{ marginLeft: "5px", width: "20%", height: "100%" }}
+            >
+              Надіслати
+            </Button>
+          </Grid>
         </Grid>
-            {" "}
       </Grid>
-        {" "}
     </Container>
   );
 }
